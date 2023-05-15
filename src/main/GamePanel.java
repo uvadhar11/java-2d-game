@@ -1,3 +1,7 @@
+package main;
+
+import entity.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -6,7 +10,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; // 16x16 tile - default size of player character, npcs, etc. Some games use 32px
     // modern computers have more pixels so 16 pixel characters looks tiny in mordern computers so we need to sclae it.
     final int scale = 3;
-    final int tileSize = originalTileSize * scale; // calculate the actual tile size displayed on the screen
+    // public so we can access in other classes
+    public final int tileSize = originalTileSize * scale; // calculate the actual tile size displayed on the screen
     final int maxScreenCol = 16; // 16 cols here
     final int maxScreenRow = 12; // 12 rows
     final int screenWidth = tileSize * maxScreenCol; // 768 pixels
@@ -17,9 +22,10 @@ public class GamePanel extends JPanel implements Runnable {
     int FPS = 60;
 
     // NEED a thread
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(); // make a key handler
     Thread gameThread; // keeps a program running until you stop it - for things you want to repeat again and again
     // set player's default position
+    Player player = new Player(this, keyH); // make player
     int playerX = 100;
     int playerY = 100;
     int playerSpeed = 4;
@@ -27,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); // for better rendering purposes
-        this.addKeyListener(keyH);
+        this.addKeyListener(keyH); // make a key listener
         this.setFocusable(true);
     }
 
@@ -121,18 +127,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         // update player coordinates with player pos and player speed
-        if (keyH.upPressed) {
-            playerY -= playerSpeed;
-        }
-        else if (keyH.downPressed){
-            playerY += playerSpeed;
-        }
-        else if (keyH.leftPressed) {
-            playerX -= playerSpeed;
-        }
-        else if (keyH.rightPressed) {
-            playerX += playerSpeed;
-        }
+        player.update();
     }
 
     public void paintComponent(Graphics g) {
@@ -141,9 +136,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         // draw rectangles
         Graphics2D g2 = (Graphics2D)g; // use graphics 2d class and type cast graphics object to grpahics 2d
-        g2.setColor(Color.white); // set color white
-        // fill rectangle. Params: x, y, l, w
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
+        player.draw(g2); // draw player
         g2.dispose(); // memory clean up with this graphic object
     }
 
