@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,14 +13,16 @@ public class GamePanel extends JPanel implements Runnable {
     final int scale = 3;
     // public so we can access in other classes
     public final int tileSize = originalTileSize * scale; // calculate the actual tile size displayed on the screen
-    final int maxScreenCol = 16; // 16 cols here
-    final int maxScreenRow = 12; // 12 rows
-    final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-    final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+    public int maxScreenCol = 16; // 16 cols here
+    public int maxScreenRow = 12; // 12 rows
+    public int screenWidth = tileSize * maxScreenCol; // 768 pixels
+    public int screenHeight = tileSize * maxScreenRow; // 576 pixels
     // MIGHT want to change it to scale depending on the size of the player's screen.
 
     // fps
     int FPS = 60;
+    // make tile manager
+    TileManager tileM = new TileManager(this); // passing in this gp object
 
     // NEED a thread
     KeyHandler keyH = new KeyHandler(); // make a key handler
@@ -102,9 +105,9 @@ public class GamePanel extends JPanel implements Runnable {
             // this gives how much time has elapsed of one frame.
             // so we add the fractions together until its a whole number.
             delta += (currentTime - lastTime) / drawInterval;
-            System.out.println("Time change: " + (currentTime - lastTime));
-            System.out.println("draw int: " + drawInterval);
-            System.out.println("delta" + delta);
+//            System.out.println("Time change: " + (currentTime - lastTime));
+//            System.out.println("draw int: " + drawInterval);
+//            System.out.println("delta" + delta);
             timer += (currentTime - lastTime);
             lastTime = currentTime;
             // allows delta to accumulate until its 1 or > meaning 1
@@ -136,6 +139,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         // draw rectangles
         Graphics2D g2 = (Graphics2D)g; // use graphics 2d class and type cast graphics object to grpahics 2d
+
+        tileM.draw(g2); // need to draw the tiles first then the player
+        // otherwise the player will be underneath the tiles. LAYERS
         player.draw(g2); // draw player
         g2.dispose(); // memory clean up with this graphic object
     }
