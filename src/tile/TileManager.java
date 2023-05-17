@@ -9,10 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+// tile management for tiles
 public class TileManager {
     GamePanel gp; // game panel object
-    Tile[] tile; // array of tiles
-    int mapTileNum[][];
+    Tile[] tile; // array of tile types
+    int mapTileNum[][]; // 2d array of tiles
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
