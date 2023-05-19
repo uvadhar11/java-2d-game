@@ -18,14 +18,14 @@ public class TileManager {
     public TileManager(GamePanel gp) {
         this.gp = gp;
         tile = new Tile[10]; // 10 types of tiles
-        mapTileNum = new int[gp.maxScreenCol][gp.maxScreenRow]; // stores the map tile data
+        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow]; // stores the map tile data
         getTileImage();// get the tile images (populate them in the tile array)
-        loadMap("/maps/map01.txt"); // call the method to load the map. argument to change map
+        loadMap("/maps/world01.txt"); // call the method to load the map. argument to change map
     }
     // loading the images in this function
     public void getTileImage() {
         try {
-            // load each tile in the array by amking a new tile and then reading the file
+            // load each tile in the array by making a new tile and then reading the file
             tile[0] = new Tile();
             tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass.png"));
 
@@ -34,6 +34,15 @@ public class TileManager {
 
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water.png"));
+
+            tile[3] = new Tile();
+            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/earth.png"));
+
+            tile[4] = new Tile();
+            tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree.png"));
+
+            tile[5] = new Tile();
+            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png"));
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -49,10 +58,11 @@ public class TileManager {
 
             int col = 0;
             int row = 0;
-            while(col < gp.maxScreenCol && row < gp.maxScreenRow) {
+            // using maxWorldCol and Row so the boundaries of the map aren't the screen size but the map size (the max)
+            while(col < gp.maxWorldCol && row < gp.maxWorldRow) {
                 // read the text file in the while loop
                 String line = br.readLine(); // reads the single line of the text file and stores it in this string
-                while(col < gp.maxScreenCol) {
+                while(col < gp.maxWorldCol) {
                     // stores each number as a string by spaces
                     String numbers[] = line.split(" ");
                     // change string to a number
@@ -61,7 +71,7 @@ public class TileManager {
                     col++;
                 }
                 // if we get the max screen column then col = 0 and go to the next row
-                if (col == gp.maxScreenCol) {
+                if (col == gp.maxWorldCol) {
                     col = 0;
                     row++;
                 }
@@ -74,28 +84,44 @@ public class TileManager {
     }
     // draw the tiles
     public void draw(Graphics2D g2) {
-        int col = 0;
-        int row = 0;
-        int x = 0;
-        int y = 0;
+        int worldCol = 0;
+        int worldRow = 0;
 
-        while (col < gp.maxScreenCol && row < gp.maxScreenRow) {
+        while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
             // get the current tile's number
-            int tileNum = mapTileNum[col][row];
-            // draw the image
-            g2.drawImage(tile[tileNum].image, x, y, gp.tileSize, gp.tileSize, null);
-            // increase col by 1 to go to the next column and increment x by the size of a tile to draw the next one
-            col++;
-            x += gp.tileSize;
+            int tileNum = mapTileNum[worldCol][worldRow];
 
-            // if the col is the max col number then
+            // In other words, tiles' screenX and screenY change depending on the player's current position.
+            // On the other hand, tiles' worldX and worldY don't change since tiles position on the map are fixed.
+
+            // get the tile's worldx and the coord is the col number times the size of one tiles on the screen
+            int worldX = worldCol * gp.tileSize;
+            int worldY = worldRow * gp.tileSize;
+
+            // where to draw
+            // worldx - pos on map, screenx is where on screen we draw it
+            int screenX = worldX - gp.player.worldX + gp.player.screenX;
+            int screenY = worldY - gp.player.worldY + gp.player.screenY;
+
+            // to make sure u are only rendering tiles u see on the screen to not slow the
+            // game down, add this if. These checks get the boundary between the player to the ends of the screens on each side
+            // we added a tile to each side since were seeing the black background by adding/subtracting a tile size from the world vars
+            if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
+                    worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+                    worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+                    worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+                // draw the image
+                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            }
+            // increase col by 1 to go to the next column and increment x by the size of a tile to draw the next one
+            worldCol++;
+
+            // if the col is the max col number of the world then
             // set col, x to 0 and go to next row and increment
             // y by the tileSize to go to the next tile
-            if (col == gp.maxScreenCol) {
-                col = 0;
-                x = 0;
-                row++;
-                y += gp.tileSize;
+            if (worldCol == gp.maxWorldCol) {
+                worldCol = 0;
+                worldRow++;
             }
         }
     }

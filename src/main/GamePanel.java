@@ -19,7 +19,15 @@ public class GamePanel extends JPanel implements Runnable {
     public int screenHeight = tileSize * maxScreenRow; // 576 pixels
     // MIGHT want to change it to scale depending on the size of the player's screen.
 
-    // fps
+    // WORLD SETTINGS FOR LIKE CAMERA AND STUFF
+    // max number of cols and rows for the world file
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    // width and height of the world based on row/col * size of a tile
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
+
+    // FPS
     int FPS = 60;
     // make tile manager
     TileManager tileM = new TileManager(this); // passing in this gp object
@@ -28,7 +36,9 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler(); // make a key handler
     Thread gameThread; // keeps a program running until you stop it - for things you want to repeat again and again
     // set player's default position
-    Player player = new Player(this, keyH); // make player
+
+    // make the player public so we can access it outside of this class.
+    public Player player = new Player(this, keyH); // make player
     int playerX = 100;
     int playerY = 100;
     int playerSpeed = 4;

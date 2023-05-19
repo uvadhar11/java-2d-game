@@ -13,17 +13,31 @@ public class Player extends Entity {
     GamePanel gp;
     KeyHandler keyH;
 
+    // screen x, y - where to draw player on the screen.
+    // player's screen position (center of the screen) - so basically
+    // the player is going to be in the center of the screen always and the world will move around him
+    // so the screenx and y are the center of the screen where the player is.
+    // the worldx and worldy is the x and y coords of the player in the world coordinates
+    public final int screenX;
+    public final int screenY;
+
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        // have to subtract half a tile since the coordinates are the top left and we want center
+        // so get the center tile and then subtract a tile so he is actually in the middle
+        screenX = gp.screenWidth/2 - (gp.tileSize /2);
+        screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
         setDefaultValues(); // set the defaults for player
         getPlayerImage(); // call the method to get the images
     }
     // set the default values of the player class.
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        // change player's location in world to center at init
+        worldX = gp.tileSize * 23;
+        worldY = gp.tileSize * 21;
         speed = 4;
         direction = "down";
     }
@@ -59,16 +73,16 @@ public class Player extends Entity {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {
                 direction = "up";
-                y -= speed;
+                worldY -= speed;
             } else if (keyH.downPressed) {
                 direction = "down";
-                y += speed;
+                worldY += speed;
             } else if (keyH.leftPressed) {
                 direction = "left";
-                x -= speed;
+                worldX -= speed;
             } else if (keyH.rightPressed) {
                 direction = "right";
-                x += speed;
+                worldX += speed;
             }
 
             // update method called 60 times per second.
@@ -139,6 +153,6 @@ public class Player extends Entity {
                 break;
         }
         // draw the image we get from the case statement.
-        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 }
