@@ -12,7 +12,7 @@ public class GamePanel extends JPanel implements Runnable {
     // modern computers have more pixels so 16 pixel characters looks tiny in mordern computers so we need to sclae it.
     final int scale = 3;
     // public so we can access in other classes
-    public final int tileSize = originalTileSize * scale; // calculate the actual tile size displayed on the screen
+    public int tileSize = originalTileSize * scale; // calculate the actual tile size displayed on the screen
     public int maxScreenCol = 16; // 16 cols here
     public int maxScreenRow = 12; // 12 rows
     public int screenWidth = tileSize * maxScreenCol; // 768 pixels
@@ -27,15 +27,21 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
+    // multiplier for the zoom
+    public double multiplier = 1;
+
     // FPS
     int FPS = 60;
     // make tile manager
     TileManager tileM = new TileManager(this); // passing in this gp object
 
     // NEED a thread
-    KeyHandler keyH = new KeyHandler(); // make a key handler
+    KeyHandler keyH = new KeyHandler(this); // make a key handler
     Thread gameThread; // keeps a program running until you stop it - for things you want to repeat again and again
     // set player's default position
+
+    // make a new collision checker object
+    public CollisionChecker cChecker = new CollisionChecker(this);
 
     // make the player public so we can access it outside of this class.
     public Player player = new Player(this, keyH); // make player
@@ -48,6 +54,30 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // for better rendering purposes
         this.addKeyListener(keyH); // make a key listener
         this.setFocusable(true);
+    }
+
+    // zooming in and out function
+    public void zoomInOut(int i) {
+        // get the old world width
+        int oldWorldWidth = tileSize * maxWorldCol;
+        tileSize += i; // changing the tile size based on the zooming in or out param
+        // we pass 1 for zoom in so +1 and -1 for zoom out so subtracts 1 from tile size
+
+        // new world width variable
+        int newWorldWidth = tileSize * maxWorldCol;
+
+        // change the player's speed accordingly so doesn't move faster if he
+        // zooms in or out
+        player.speed = (double) newWorldWidth/600;
+
+        // multiplier is the ratio with which to change the players world x and y
+        multiplier = (double) newWorldWidth/oldWorldWidth;
+        double newPlayerWorldX = player.worldX * multiplier;
+        double newPlayerWorldY = player.worldX * multiplier;
+
+        // change the players world x and y accordingly
+        player.worldX = newPlayerWorldX;
+        player.worldY = newPlayerWorldY;
     }
 
     public void startGameThread() {

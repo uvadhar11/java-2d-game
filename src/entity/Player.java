@@ -30,6 +30,13 @@ public class Player extends Entity {
         screenX = gp.screenWidth/2 - (gp.tileSize /2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
+        // make a rectangle for the solid area of the player where collision is on
+        solidArea = new Rectangle(0,0,48,48);
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
+
         setDefaultValues(); // set the defaults for player
         getPlayerImage(); // call the method to get the images
     }
@@ -38,7 +45,10 @@ public class Player extends Entity {
         // change player's location in world to center at init
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
-        speed = 4;
+//        speed = 4;
+        // get the speed which is the world width divided by 600 (div by 600
+        // since this ratio gets us 4
+        speed = gp.worldWidth/600;
         direction = "down";
     }
     public void getPlayerImage() {
@@ -73,16 +83,36 @@ public class Player extends Entity {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {
                 direction = "up";
-                worldY -= speed;
             } else if (keyH.downPressed) {
                 direction = "down";
-                worldY += speed;
             } else if (keyH.leftPressed) {
                 direction = "left";
-                worldX -= speed;
             } else if (keyH.rightPressed) {
                 direction = "right";
-                worldX += speed;
+            }
+
+            // collision checking
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            // if collision is false, player can move
+            // moved the world postition changing in here so u can only move
+            // if you are not colliding
+            if (collisionOn == false) {
+                switch(direction) {
+                    case "up":
+                        worldY -= speed;
+                        break;
+                    case "down":
+                        worldY += speed;
+                        break;
+                    case "left":
+                        worldX -= speed;
+                        break;
+                    case "right":
+                        worldX += speed;
+                        break;
+                }
             }
 
             // update method called 60 times per second.
