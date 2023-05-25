@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -43,17 +44,26 @@ public class GamePanel extends JPanel implements Runnable {
     // make a new collision checker object
     public CollisionChecker cChecker = new CollisionChecker(this);
 
+    // create the asset setter object for object setting
+    public AssetSetter aSetter = new AssetSetter(this);
+
     // make the player public so we can access it outside of this class.
     public Player player = new Player(this, keyH); // make player
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
+    public SuperObject obj[] = new SuperObject[10]; // array for displaying up to 10 objects in the game at a time
+
+    // METHODS AND CONSTRUCTOR
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); // for better rendering purposes
         this.addKeyListener(keyH); // make a key listener
         this.setFocusable(true);
+    }
+
+    // game setup method
+    public void setupGame() {
+        // call this method before the game starts
+        aSetter.setObject();
     }
 
     // zooming in and out function
@@ -180,8 +190,22 @@ public class GamePanel extends JPanel implements Runnable {
         // draw rectangles
         Graphics2D g2 = (Graphics2D)g; // use graphics 2d class and type cast graphics object to grpahics 2d
 
+        // draw tile
         tileM.draw(g2); // need to draw the tiles first then the player
         // otherwise the player will be underneath the tiles. LAYERS
+
+        // draw objects
+        // need to find what object we are going to draw
+        // and looping thru the obj array with our individual objects
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                // if the index place isnt null (an obj exists)
+                // draw the image calling draw in the super obj class
+                obj[i].draw(g2, this);
+            }
+        }
+
+        // draw player
         player.draw(g2); // draw player
         g2.dispose(); // memory clean up with this graphic object
     }
