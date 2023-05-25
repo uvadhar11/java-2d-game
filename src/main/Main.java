@@ -31,9 +31,14 @@ public class Main {
         window.add(gamePanel);
         window.pack();
 
+        // make the window visible and location not rel to
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
+        // set the game up
+        gamePanel.setupGame();
+
+        // start the game thread
         gamePanel.startGameThread();
     }
 }
