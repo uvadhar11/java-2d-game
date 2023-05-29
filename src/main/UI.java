@@ -66,7 +66,7 @@ public class UI {
 
             // play time string
             text = "Your Time is: " + dFormat.format(playTime) + "!";
-            // get the length of the text in world coords
+            // get the length of the text in pixels
             textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
             // x coord adjusted based on text
             x = gp.screenWidth/2 - textLength/2;
