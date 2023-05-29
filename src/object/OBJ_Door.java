@@ -15,5 +15,7 @@ public class OBJ_Door extends SuperObject {
             // print the error if there is one
             e.printStackTrace();
         }
+        // want collision to be true for doors
+        collision = true;
     }
 }

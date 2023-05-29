@@ -6,7 +6,7 @@ import java.io.IOException;
 // key object class extending the super object class
 public class OBJ_Key extends SuperObject {
     public OBJ_Key() {
-        name = "Key";
+        this.name = "Key";
         try {
             // get the image and store it in image (a buffered image var)
             image = ImageIO.read(getClass().getResourceAsStream("/objects/key.png"));

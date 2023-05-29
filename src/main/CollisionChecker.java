@@ -83,4 +83,102 @@ public class CollisionChecker {
                 break;
         }
     }
+    // check if plr hitting any object, if so, return index of the object
+    public int checkObject(Entity entity, boolean player) {
+        int index = 999;
+
+        // loop through the object array
+        for (int i = 0; i < gp.obj.length; i++) {
+            // check if the obj is null
+            if (gp.obj[i] != null) {
+                // gets the solid area's current position
+                // so we can then check for collision
+
+                // Get entity's solid area position
+                // this is the world x/y + solid area x/y which gets the x/y where
+                // the object will collide with something
+                entity.solidArea.x = (int) entity.worldX + entity.solidArea.x;
+                entity.solidArea.y = (int) entity.worldY + entity.solidArea.y;
+
+                // Get the object's solid area position
+                // this is the same as with the entity object
+                gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;
+                gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;
+
+                // switch statement for checking direction
+                // simulating entity movements and check where itll be after it moves
+                switch (entity.direction) {
+                    case "up":
+                        // going up so subtract solid area by entity speed so
+                        // we can check where the solid area positions will be
+                        // (right before they move with the keys for movement) are pressed
+                        // and we have to check before the movement so we can make sure if they collide
+                        // they aren't moving into that object or to do certain tasks like these obj interactions
+                        entity.solidArea.y -= entity.speed;
+
+                        // checks if the 2 areas with the solid area rectangles
+                        // (rects for collision) intersect, meaning they collided...
+                        if (entity.solidArea.intersects(gp.obj[i].solidArea)) {
+                            // check if the object is solid or not, if so set collisionOn to true
+                            // to say its colliding with something actively
+                            if (gp.obj[i].collision == true) {
+                                entity.collisionOn = true;
+                            }
+                            // if the player is intersecting with this object, then set the index to be returned to the index
+                            // of this object because this object is colliding with the player
+                            if (player == true) {
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "down":
+                        entity.solidArea.y += entity.speed;
+                        if (entity.solidArea.intersects(gp.obj[i].solidArea)) {
+                            if (gp.obj[i].collision == true) {
+                                entity.collisionOn = true;
+                            }
+                            if (player == true) {
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "left":
+                        entity.solidArea.x -= entity.speed;
+                        if (entity.solidArea.intersects(gp.obj[i].solidArea)) {
+                            if (gp.obj[i].collision == true) {
+                                entity.collisionOn = true;
+                            }
+                            if (player == true) {
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "right":
+                        entity.solidArea.x += entity.speed;
+                        if (entity.solidArea.intersects(gp.obj[i].solidArea)) {
+                            if (gp.obj[i].collision == true) {
+                                entity.collisionOn = true;
+                            }
+                            if (player == true) {
+                                index = i;
+                            }
+                        }
+                        break;
+                }
+
+                // after this switch statement we need to reset the values of the solid area
+                // otherwise it will keep incrementing when we add world x and world y
+
+                // set entity solidArea x and y to the default
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+
+                // set the object solid areas for x and y to the default
+                gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
+                gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;
+            }
+        }
+
+        return index;
+    }
 }

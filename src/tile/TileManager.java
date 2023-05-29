@@ -140,7 +140,7 @@ public class TileManager {
 
 
                 // print statements for understanding
-                System.out.println("Current player: " + gp.player.worldX + ", " + gp.player.worldY);
+                // System.out.println("Current player: " + gp.player.worldX + ", " + gp.player.worldY);
                 // System.out.println("Current screen: " + screenX + ", " + screenY);
                     // draw the image
                     g2.drawImage(tile[tileNum].image, (int) screenX, (int) screenY, gp.tileSize, gp.tileSize, null);

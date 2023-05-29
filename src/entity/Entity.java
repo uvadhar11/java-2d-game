@@ -17,8 +17,10 @@ public class Entity {
     public int spriteCounter = 0; // var to make sure obj not animating 60 times/sec - explained in plr class.
     public int spriteNum = 1; // current image number in animation since there are 2 images for each animation for the obj.
 
-    // collision - set a certain area of entity to be solid so easy to go thru
+    // collision - set a certain area of entity to be solid so easy to go through
     // narrow tile spaces.
     public Rectangle solidArea;
+    // variables for solid area defaults
+    public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
 }

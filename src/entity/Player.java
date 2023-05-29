@@ -20,6 +20,8 @@ public class Player extends Entity {
     // the worldx and worldy is the x and y coords of the player in the world coordinates
     public final int screenX;
     public final int screenY;
+    // number of keys the player has
+    int keys = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -32,8 +34,18 @@ public class Player extends Entity {
 
         // make a rectangle for the solid area of the player where collision is on
         solidArea = new Rectangle(0,0,48,48);
+
+        // changing the coordinates of the rectangle for solid area.
         solidArea.x = 8;
         solidArea.y = 16;
+
+        // default solid area values for x and y (For collision, etc)
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+
+        // setting the width and height of the player's solid area to be 32
+        // so its not his entire width/height which is exactly one tile
+        // so the player can easily move between one tile gaps
         solidArea.width = 32;
         solidArea.height = 32;
 
@@ -68,6 +80,8 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
+
+
     // function to update the player's position (based on
     // key inputs).
     public void update() {
@@ -91,12 +105,19 @@ public class Player extends Entity {
                 direction = "right";
             }
 
-            // collision checking
+            // CHECK TILE COLLISION
             collisionOn = false;
             gp.cChecker.checkTile(this);
 
+            // CHECK OBJECT COLLISION
+            // pass in this object as an entity and its a player so true in the collision checker class
+            // calling the checkObject method which returns the obj index its colliding with
+            int objIndex = gp.cChecker.checkObject(this, true);
+            System.out.println(objIndex);
+            pickUpObject(objIndex); // call pick up obj method
+
             // if collision is false, player can move
-            // moved the world postition changing in here so u can only move
+            // moved the world position changing in here so u can only move
             // if you are not colliding
             if (collisionOn == false) {
                 switch(direction) {
@@ -133,6 +154,37 @@ public class Player extends Entity {
             }
         }
     }
+
+    // method for picking up objects, accepts index for the obj
+    public void pickUpObject(int i) {
+        // index 999 means we didn't collide with any objects, so if we touched an object...
+        if (i != 999) {
+            // get the collided object's name
+            String objectName = gp.obj[i].name;
+            switch (objectName) {
+                case "Key":
+                    // if this object is a key, then
+                    // increment keys count
+                    keys++;
+                    // set the current object to null, so it will disappear from the screen
+                    gp.obj[i] = null;
+                    System.out.println("Key:" + keys);
+                    break;
+                case "Door":
+                    // if the object is a door, then if keys count > 0
+                    // set the current object to null (removed from screen)
+                    // and decrement keys by 1, to simulate a key opening a door.
+                    if (keys > 0) {
+                        gp.obj[i] = null;
+                        keys--;
+                    }
+                    System.out.println("Key:" + keys);
+                    break;
+
+            }
+        }
+    }
+
     // moved draw function here which is used to draw the
     // player on the screen.
     public void draw(Graphics2D g2) {
