@@ -21,7 +21,7 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     // number of keys the player has
-    int keys = 0;
+    public int keys = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -169,7 +169,8 @@ public class Player extends Entity {
                     keys++;
                     // set the current object to null, so it will disappear from the screen
                     gp.obj[i] = null;
-                    System.out.println("Key:" + keys);
+                    // show the ui notification when u get a key
+                    gp.ui.showMessage("You got a Key!");
                     break;
                 case "Door":
                     // if the object is a door, then if keys count > 0
@@ -180,8 +181,11 @@ public class Player extends Entity {
                         gp.playSE(3);
                         gp.obj[i] = null;
                         keys--;
+                        gp.ui.showMessage("You opened the door!");
                     }
-                    System.out.println("Key:" + keys);
+                    else {
+                        gp.ui.showMessage("You need a key!");
+                    }
                     break;
                 case "Boots":
                     // play power up sound effect
@@ -189,6 +193,15 @@ public class Player extends Entity {
                     // these boots give a speed power up
                     speed += 1;
                     gp.obj[i] = null;
+                    gp.ui.showMessage("Speed Boost Activated");
+                    break;
+                case "Chest":
+                    // once you get the chest, you beat the game
+                    gp.ui.gameFinished = true;
+                    // stop the music
+                    gp.stopMusic();
+                    // play fanfare sound effect
+                    gp.playSE(4);
                     break;
             }
         }

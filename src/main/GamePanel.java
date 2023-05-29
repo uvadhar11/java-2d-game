@@ -40,13 +40,18 @@ public class GamePanel extends JPanel implements Runnable {
     TileManager tileM = new TileManager(this); // passing in this gp (game panel) object
     // make a key handler object
     KeyHandler keyH = new KeyHandler(this);
-    // make a sound object
-    Sound sound = new Sound();
+    // we have 2 sound objects so we can have the music stop when playing a sound effect since they played at the same time
+    // make a music sound object
+    Sound music = new Sound();
+    // make a sound effect object
+    Sound se = new Sound();
     // make a new collision checker object
     public CollisionChecker cChecker = new CollisionChecker(this);
 
     // create the asset setter object for object setting
     public AssetSetter aSetter = new AssetSetter(this);
+    // make a UI object
+    public UI ui = new UI(this);
     Thread gameThread; // keeps a program running until you stop it - for things you want to repeat again and again
 
 
@@ -194,7 +199,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g); // calls parent paint component
 
         // draw rectangles
-        Graphics2D g2 = (Graphics2D)g; // use graphics 2d class and type cast graphics object to grpahics 2d
+        Graphics2D g2 = (Graphics2D) g; // use graphics 2d class and type cast graphics object to graphics 2d
 
         // draw tile
         tileM.draw(g2); // need to draw the tiles first then the player
@@ -213,6 +218,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         // draw player
         player.draw(g2); // draw player
+
+        // draw the ui, at end since tiles, plr will hide it
+        ui.draw(g2);
+
         g2.dispose(); // memory clean up with this graphic object
     }
 
@@ -220,25 +229,25 @@ public class GamePanel extends JPanel implements Runnable {
     // which is BlueBoyAdventure
     public void playMusic(int i) {
         // get the sound file
-        sound.setFile(i);
+        music.setFile(i);
         // play the music
-        sound.play();
+        music.play();
         // loop the music
-        sound.loop();
+        music.loop();
     }
 
     // stop the music
     public void stopMusic() {
         // stop the music
-        sound.stop();
+        music.stop();
     }
 
     // plays a sound effect, takes index of the sound
     public void playSE(int i) {
         // get the sound effect file
-        sound.setFile(i);
+        se.setFile(i);
         // play the sound effect
-        sound.play();
+        se.play();
         // no looping the sound effect since we want it to play once (cuz it's a sound effect)
     }
 
