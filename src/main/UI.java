@@ -11,7 +11,7 @@ public class UI {
     // make an instance variable of type game panel
     GamePanel gp;
     Font arial_40, arial_80B;
-    BufferedImage keyImage; // image and instantiate in UI constructor NOT in game loop otherwise will keep drawing 60/s
+    BufferedImage keyImage; // image and instantiate in UI constructor NOT in game loop otherwise will keep drawing 60 times/second
     // variables for messages like when you pick up an obj, etc.
     public boolean messageOn = false;
     public String message = "";

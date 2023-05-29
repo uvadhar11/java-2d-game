@@ -131,11 +131,11 @@ public class TileManager {
                 // NEW SOLUTION:
                 // limit the position of the player's movement
                 // if the player is at the top of the map then set the pos of the player back to 0 (the y pos)
-                if (gp.player.worldY <= 0) gp.player.worldY = 0;
-                // subtract a tile size because we added a tile to each side to get rid of the black background when adding tiles for rendering
-                if (gp.player.worldY >= (gp.worldHeight - gp.tileSize)*gp.multiplier) gp.player.worldY = (gp.worldHeight - gp.tileSize)*gp.multiplier;
-                if (gp.player.worldX <= 0) gp.player.worldX = 0;
-                if (gp.player.worldX >= (gp.worldWidth - gp.tileSize)*gp.multiplier) gp.player.worldX = (gp.worldWidth - gp.tileSize)*gp.multiplier;
+//                if (gp.player.worldY <= 0) gp.player.worldY = 0;
+//                // subtract a tile size because we added a tile to each side to get rid of the black background when adding tiles for rendering
+//                if (gp.player.worldY >= (gp.worldHeight - gp.tileSize)*gp.multiplier) gp.player.worldY = (gp.worldHeight - gp.tileSize)*gp.multiplier;
+//                if (gp.player.worldX <= 0) gp.player.worldX = 0;
+//                if (gp.player.worldX >= (gp.worldWidth - gp.tileSize)*gp.multiplier) gp.player.worldX = (gp.worldWidth - gp.tileSize)*gp.multiplier;
 
 
 
