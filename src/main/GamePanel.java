@@ -33,21 +33,25 @@ public class GamePanel extends JPanel implements Runnable {
 
     // FPS
     int FPS = 60;
+
+
+    // SYSTEM
     // make tile manager
-    TileManager tileM = new TileManager(this); // passing in this gp object
-
-    // NEED a thread
-    KeyHandler keyH = new KeyHandler(this); // make a key handler
-    Thread gameThread; // keeps a program running until you stop it - for things you want to repeat again and again
-    // set player's default position
-
+    TileManager tileM = new TileManager(this); // passing in this gp (game panel) object
+    // make a key handler object
+    KeyHandler keyH = new KeyHandler(this);
+    // make a sound object
+    Sound sound = new Sound();
     // make a new collision checker object
     public CollisionChecker cChecker = new CollisionChecker(this);
 
     // create the asset setter object for object setting
     public AssetSetter aSetter = new AssetSetter(this);
+    Thread gameThread; // keeps a program running until you stop it - for things you want to repeat again and again
 
-    // make the player public so we can access it outside of this class.
+
+    // ENTITY AND OBJECT
+    // make the player public, so we can access it outside of this class.
     public Player player = new Player(this, keyH); // make player
     public SuperObject obj[] = new SuperObject[10]; // array for displaying up to 10 objects in the game at a time
 
@@ -64,6 +68,8 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         // call this method before the game starts
         aSetter.setObject();
+        // play the game theme/music which is at index 0
+        playMusic(0);
     }
 
     // zooming in and out function
@@ -208,6 +214,32 @@ public class GamePanel extends JPanel implements Runnable {
         // draw player
         player.draw(g2); // draw player
         g2.dispose(); // memory clean up with this graphic object
+    }
+
+    // play music method, music is the overall game theme
+    // which is BlueBoyAdventure
+    public void playMusic(int i) {
+        // get the sound file
+        sound.setFile(i);
+        // play the music
+        sound.play();
+        // loop the music
+        sound.loop();
+    }
+
+    // stop the music
+    public void stopMusic() {
+        // stop the music
+        sound.stop();
+    }
+
+    // plays a sound effect, takes index of the sound
+    public void playSE(int i) {
+        // get the sound effect file
+        sound.setFile(i);
+        // play the sound effect
+        sound.play();
+        // no looping the sound effect since we want it to play once (cuz it's a sound effect)
     }
 
 }

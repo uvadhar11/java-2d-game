@@ -113,7 +113,6 @@ public class Player extends Entity {
             // pass in this object as an entity and its a player so true in the collision checker class
             // calling the checkObject method which returns the obj index its colliding with
             int objIndex = gp.cChecker.checkObject(this, true);
-            System.out.println(objIndex);
             pickUpObject(objIndex); // call pick up obj method
 
             // if collision is false, player can move
@@ -164,6 +163,8 @@ public class Player extends Entity {
             switch (objectName) {
                 case "Key":
                     // if this object is a key, then
+                    // play coin sound effect here
+                    gp.playSE(1);
                     // increment keys count
                     keys++;
                     // set the current object to null, so it will disappear from the screen
@@ -175,12 +176,20 @@ public class Player extends Entity {
                     // set the current object to null (removed from screen)
                     // and decrement keys by 1, to simulate a key opening a door.
                     if (keys > 0) {
+                        // play unlock sound effect
+                        gp.playSE(3);
                         gp.obj[i] = null;
                         keys--;
                     }
                     System.out.println("Key:" + keys);
                     break;
-
+                case "Boots":
+                    // play power up sound effect
+                    gp.playSE(2);
+                    // these boots give a speed power up
+                    speed += 1;
+                    gp.obj[i] = null;
+                    break;
             }
         }
     }
